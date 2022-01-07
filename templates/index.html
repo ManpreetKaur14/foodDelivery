@@ -1,0 +1,397 @@
+{%load static%} {%load socialaccount%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Olive Garden-Home</title>
+    <link
+      rel="shortcut icon"
+      href="{%static 'images/logo.svg'%}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+
+    <!-- custom js file link  -->
+    <script defer src="{%static 'js/script.js'%}"></script>
+  </head>
+  <body>
+    {% if anchor %}
+    <h1>Linking anchor</h1>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        window.location = "#{{ anchor }}";
+      });
+    </script>
+    {% endif %} {% if error %}
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+      const notyf = new Notyf({
+        duration: 10000,
+        position: {
+          x: "center",
+          y: "top",
+        },
+        types: [
+          {
+            type: "error",
+            background: "indianred",
+            duration: 3000,
+            dismissible: true,
+          },
+        ],
+      });
+      notyf.error("{{error}}");
+    </script>
+    {% endif %}
+    <!-- header section starts      -->
+    <header>
+      <a href="#" class="logo"><i class="fas fa-utensils"></i> Olive Garden</a>
+
+      <nav class="navbar">
+        <a href="#home">home</a>
+        <a href="#dishes">dishes</a>
+        <a href="#about">about</a>
+        <a href="#menu">menu</a>
+        <a href="#review">review</a>
+        <!-- <a href="#order">order</a> -->
+      </nav>
+
+      <div class="icons">
+        <i class="fas fa-bars" id="menu-bars"></i>
+        <i class="fas fa-search" id="search-icon"></i>
+        <a href="#" class="fas fa-heart"></a>
+        <a href="#" class="fas fa-shopping-cart"></a>
+        {%if user.is_authenticated%}
+        <a href="{%url 'logout'%}" class="fas fa-arrow-left"></a>
+        {%else%}
+        <a href="login" class="fas fa-arrow-right"> </a>
+        {%endif%}
+      </div>
+    </header>
+    <!-- header section ends-->
+
+    <!-- search form  -->
+
+    <form method="POST" id="search-form">
+      {%csrf_token%}
+      <input
+        type="search"
+        placeholder="search for food name, category...."
+        name="searchbar"
+        id="search-box"
+      />
+      <label for="search-box" class="fas fa-search search_button"> </label>
+      <i class="fas fa-times" id="close"></i>
+    </form>
+
+    <!-- home section starts  -->
+
+    <section class="home" data-uid="home" id="home">
+      <div class="swiper-container home-slider">
+        <div class="swiper-wrapper wrapper">
+          <!-- * Dish Content -->
+          {%for i in banner%}
+          <div class="swiper-slide slide">
+            <div class="content" id="{{i.dishId}}">
+              <span>our special dish</span>
+              <h3>{{i.dishName}}</h3>
+              <p>{{i.dishDescription}}</p>
+              <a href="#" class="btn">order now</a>
+            </div>
+            <div class="image">
+              <img src="{{i.dishImage.url}}" alt="" />
+            </div>
+          </div>
+          {%endfor%}
+        </div>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    </section>
+
+    <!-- home section ends -->
+
+    <!-- dishes section starts  -->
+
+    <section class="dishes" id="dishes">
+      {%if term%}
+      <h1 class="heading">Search Result for '{{term}}'</h1>
+      {%else%}
+      <h3 class="sub-heading">our dishes</h3>
+      <h1 class="heading">popular dishes</h1>
+      {%endif%}
+      <div class="box-container">
+        {%for i in popular%}
+        <div class="box" data-uid="{{i.dishId}}">
+          <a href="#" class="fas fa-heart"></a>
+          <a href="#" class="fas fa-eye"></a>
+          <img src="{{i.dishImage.url}}" alt="{{i.dishName}} image" />
+          <h3>{{i.dishName}}</h3>
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <span>₹{{i.dishPrice}}</span>
+          <a href="#" class="btn">add to cart</a>
+        </div>
+        {%endfor%}
+      </div>
+    </section>
+
+    <!-- dishes section ends -->
+
+    <!-- about section starts  -->
+
+    <section class="about" id="about">
+      <h3 class="sub-heading">about us</h3>
+      <h1 class="heading">why choose us?</h1>
+
+      <div class="row">
+        <div class="image">
+          <img src="{%static 'images/about-img.png'%}" alt="" />
+        </div>
+
+        <div class="content">
+          <h3>best food in the country</h3>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore,
+            sequi corrupti corporis quaerat voluptatem ipsam neque labore modi
+            autem, saepe numquam quod reprehenderit rem? Tempora aut soluta odio
+            corporis nihil!
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam,
+            nemo. Sit porro illo eos cumque deleniti iste alias, eum natus.
+          </p>
+          <div class="icons-container">
+            <div class="icons">
+              <i class="fas fa-shipping-fast"></i>
+              <span>free delivery</span>
+            </div>
+            <div class="icons">
+              <i class="fas fa-rupee-sign"></i>
+              <span>easy payments</span>
+            </div>
+            <div class="icons">
+              <i class="fas fa-headset"></i>
+              <span>24/7 service</span>
+            </div>
+          </div>
+          <a href="#" class="btn">learn more</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- about section ends -->
+
+    <!-- menu section starts  -->
+
+    <section class="menu" id="menu">
+      <h3 class="sub-heading">our menu</h3>
+      <h1 class="heading">today's speciality</h1>
+
+      <div class="box-container">
+        {%for i in menu%}
+        <div class="box" , data-uid="{{i.dishId}}">
+          <div class="image">
+            <img src="{{i.dishImage.url}}" alt="{{i.dishImage}} image" />
+            <a href="#" class="fas fa-heart"></a>
+          </div>
+          <div class="content">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <h3>{{i.dishName}}</h3>
+            <p>{{i.dishDescription}}</p>
+            <a href="#" class="btn">add to cart</a>
+            <span class="price">₹{{i.dishPrice}}</span>
+          </div>
+        </div>
+        {%endfor%}
+      </div>
+    </section>
+
+    <!-- menu section ends -->
+
+    <!-- review section starts  -->
+
+    <section class="review" id="review">
+      <h3 class="sub-heading">customer's review</h3>
+      <h1 class="heading">what they say</h1>
+
+      <div class="swiper-container review-slider">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide slide">
+            <i class="fas fa-quote-right"></i>
+            <div class="user">
+              <img src="{%static 'images/pic-1.png'%}" alt="" />
+              <div class="user-info">
+                <h3>Adam Levine</h3>
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+              fugiat consequuntur repellendus aperiam deserunt nihil, corporis
+              fugit voluptatibus voluptate totam neque illo placeat eius quis
+              laborum aspernatur quibusdam. Ipsum, magni.
+            </p>
+          </div>
+
+          <div class="swiper-slide slide">
+            <i class="fas fa-quote-right"></i>
+            <div class="user">
+              <img src="{%static 'images/pic-2.png'%}" alt="" />
+              <div class="user-info">
+                <h3>Jessi Lopez</h3>
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+              fugiat consequuntur repellendus aperiam deserunt nihil, corporis
+              fugit voluptatibus voluptate totam neque illo placeat eius quis
+              laborum aspernatur quibusdam. Ipsum, magni.
+            </p>
+          </div>
+
+          <div class="swiper-slide slide">
+            <i class="fas fa-quote-right"></i>
+            <div class="user">
+              <img src="{%static 'images/pic-3.png'%}" alt="" />
+              <div class="user-info">
+                <h3>Kendrick Lamar</h3>
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+              fugiat consequuntur repellendus aperiam deserunt nihil, corporis
+              fugit voluptatibus voluptate totam neque illo placeat eius quis
+              laborum aspernatur quibusdam. Ipsum, magni.
+            </p>
+          </div>
+
+          <div class="swiper-slide slide">
+            <i class="fas fa-quote-right"></i>
+            <div class="user">
+              <img src="{%static 'images/pic-4.png'%}" alt="" />
+              <div class="user-info">
+                <h3>Anna Williams</h3>
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+              fugiat consequuntur repellendus aperiam deserunt nihil, corporis
+              fugit voluptatibus voluptate totam neque illo placeat eius quis
+              laborum aspernatur quibusdam. Ipsum, magni.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- review section ends -->
+
+    <!-- footer section starts  -->
+
+    <section class="footer">
+      <div class="box-container">
+        <div class="box">
+          <h3>locations</h3>
+          <a href="https://www.google.com/search?q=olive+garden+india">India</a>
+          <a href="https://www.google.com/search?q=olive+garden+japan">Japan</a>
+          <a href="https://www.google.com/search?q=olive+garden+hawaii"
+            >Hawaii</a
+          >
+          <a href="https://www.google.com/search?q=olive+garden+america">USA</a>
+          <a href="https://www.google.com/search?q=olive+garden+canada"
+            >Canada</a
+          >
+        </div>
+
+        <div class="box">
+          <h3>quick links</h3>
+          <a href="#home">home</a>
+          <a href="#dishes">dishes</a>
+          <a href="#about">about</a>
+          <a href="#menu">menu</a>
+          <a href="#review">reivew</a>
+          <!-- <a href="#">order</a> -->
+        </div>
+
+        <div class="box">
+          <h3>contact info</h3>
+          <a href="#">+123-456-7890</a>
+          <a href="#">+111-222-3333</a>
+          <a href="#">feedback@olivegarden.com</a>
+          <a href="#">support@olivegarden.com</a>
+          <a href="#">mumbai, india - 400104</a>
+        </div>
+
+        <div class="box">
+          <h3>follow us</h3>
+          <a href="#">facebook</a>
+          <a href="#">twitter</a>
+          <a href="#">instagram</a>
+          <a href="#">linkedin</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer section ends -->
+
+    <!-- loader part  -->
+    <div class="loader-container">
+      <img src="{%static 'images/loader.gif'%}" alt="" />
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  </body>
+</html>
