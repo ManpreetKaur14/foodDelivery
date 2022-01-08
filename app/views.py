@@ -92,8 +92,8 @@ def updateItem(request):
         item=Menu.objects.get(dishId=productId)
         if item:
             # print('_________________incart_______________',Cart.objects.filter(item=item).count())
-            if Cart.objects.filter(item=item).count()!=0:
-                inCart=Cart.objects.get(item=item)
+            if Cart.objects.filter(item=item, user=request.user).count()!=0:
+                inCart=Cart.objects.get(item=item, user=request.user)
                 inCart.qty+=1
                 inCart.save()
                 return JsonResponse(f'{inCart.item.dishName} quantity has been updated to {inCart.qty}', safe=False)
@@ -107,3 +107,16 @@ def updateItem(request):
             return JsonResponse('Item not found', safe=False, status=404)
     if action=='remove':
         pass
+
+@login_required(login_url='login')
+def viewCart(request):
+    model=Cart.objects.filter(user=request.user)
+    cart=[]
+    for i in model:
+        cart.append({
+            'Item':i.item.dishName,
+            'Price':i.item.dishPrice,
+            'Quantity':i.qty
+        })
+    return JsonResponse(cart, safe=False)
+    

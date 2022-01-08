@@ -98,7 +98,11 @@
         <i class="fas fa-bars" id="menu-bars"></i>
         <i class="fas fa-search" id="search-icon"></i>
         <a href="#" class="fas fa-heart" title="liked foods"></a>
-        <a href="#" class="fas fa-shopping-cart" title="cart"></a>
+        <a
+          href="{%url 'viewCart'%}"
+          class="fas fa-shopping-cart"
+          title="cart"
+        ></a>
         {%if user.is_authenticated%}
         <a
           href="{%url 'logout'%}"

@@ -20,4 +20,4 @@ class Cart(models.Model):
     qty=models.IntegerField(default=1)
 
     def __str__(self):
-        return f'{str(self.user)} | {str(self.item.dishName)}'
+        return f'{str(self.user)} | {str(self.item.dishName)} | {self.qty}'
