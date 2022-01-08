@@ -30,20 +30,41 @@
 
     <!-- custom js file link  -->
     <script defer src="{%static 'js/script.js'%}"></script>
+    <script defer src="{%static 'js/cart.js'%}"></script>
+    <script>
+      var user = "{{request.user}}";
+      function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      var csrftoken = getToken("csrftoken");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
   </head>
   <body>
     {% if anchor %}
-    <h1>Linking anchor</h1>
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", function () {
         window.location = "#{{ anchor }}";
       });
     </script>
     {% endif %} {% if error %}
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
-      const notyf = new Notyf({
-        duration: 10000,
+      let notyf = new Notyf({
+        duration: 3000,
         position: {
           x: "center",
           y: "top",
@@ -76,10 +97,14 @@
       <div class="icons">
         <i class="fas fa-bars" id="menu-bars"></i>
         <i class="fas fa-search" id="search-icon"></i>
-        <a href="#" class="fas fa-heart"></a>
-        <a href="#" class="fas fa-shopping-cart"></a>
+        <a href="#" class="fas fa-heart" title="liked foods"></a>
+        <a href="#" class="fas fa-shopping-cart" title="cart"></a>
         {%if user.is_authenticated%}
-        <a href="{%url 'logout'%}" class="fas fa-arrow-left"></a>
+        <a
+          href="{%url 'logout'%}"
+          class="fas fa-arrow-left"
+          title="{{request.user}}: logout"
+        ></a>
         {%else%}
         <a href="login" class="fas fa-arrow-right"> </a>
         {%endif%}
@@ -109,11 +134,16 @@
           <!-- * Dish Content -->
           {%for i in banner%}
           <div class="swiper-slide slide">
-            <div class="content" id="{{i.dishId}}">
+            <div class="content">
               <span>our special dish</span>
               <h3>{{i.dishName}}</h3>
               <p>{{i.dishDescription}}</p>
-              <a href="#" class="btn">order now</a>
+              <a
+                class="btn update-cart"
+                data-product="{{i.dishId}}"
+                data-action="add"
+                >order now</a
+              >
             </div>
             <div class="image">
               <img src="{{i.dishImage.url}}" alt="" />
@@ -139,7 +169,7 @@
       {%endif%}
       <div class="box-container">
         {%for i in popular%}
-        <div class="box" data-uid="{{i.dishId}}">
+        <div class="box">
           <a href="#" class="fas fa-heart"></a>
           <a href="#" class="fas fa-eye"></a>
           <img src="{{i.dishImage.url}}" alt="{{i.dishName}} image" />
@@ -152,7 +182,12 @@
             <i class="fas fa-star-half-alt"></i>
           </div>
           <span>₹{{i.dishPrice}}</span>
-          <a href="#" class="btn">add to cart</a>
+          <a
+            class="btn update-cart"
+            data-product="{{i.dishId}}"
+            data-action="add"
+            >add to cart</a
+          >
         </div>
         {%endfor%}
       </div>
@@ -212,7 +247,7 @@
 
       <div class="box-container">
         {%for i in menu%}
-        <div class="box" , data-uid="{{i.dishId}}">
+        <div class="box">
           <div class="image">
             <img src="{{i.dishImage.url}}" alt="{{i.dishImage}} image" />
             <a href="#" class="fas fa-heart"></a>
@@ -227,7 +262,12 @@
             </div>
             <h3>{{i.dishName}}</h3>
             <p>{{i.dishDescription}}</p>
-            <a href="#" class="btn">add to cart</a>
+            <a
+              class="btn update-cart"
+              data-product="{{i.dishId}}"
+              data-action="add"
+              >add to cart</a
+            >
             <span class="price">₹{{i.dishPrice}}</span>
           </div>
         </div>

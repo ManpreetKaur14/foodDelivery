@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth import authenticate, login , logout
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+import json
 # Create your views here.
 
 def index(request):
@@ -76,3 +77,33 @@ def Userlogin(request):
 def Userlogout(request):
     logout(request)
     return redirect('index')
+
+@login_required(login_url='login')
+def updateItem(request):
+    if request.method=='GET':
+        return JsonResponse('ERR: Not a GET endpoint', safe=False)
+    data=json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+    print('Action:', action)
+    print('Product:', productId)
+    
+    if action=='add':
+        item=Menu.objects.get(dishId=productId)
+        if item:
+            # print('_________________incart_______________',Cart.objects.filter(item=item).count())
+            if Cart.objects.filter(item=item).count()!=0:
+                inCart=Cart.objects.get(item=item)
+                inCart.qty+=1
+                inCart.save()
+                return JsonResponse(f'{inCart.item.dishName} quantity has been updated to {inCart.qty}', safe=False)
+            model=Cart()
+            model.user=request.user
+            model.item=item
+            model.save()
+            return JsonResponse(f'{item.dishName} was added to the cart', safe=False)
+
+        else:
+            return JsonResponse('Item not found', safe=False, status=404)
+    if action=='remove':
+        pass
