@@ -135,19 +135,40 @@ def updateItem(request):
         else:
             return JsonResponse('Item not found', safe=False, status=404)
     if action=='remove':
-        pass
+        item=Menu.objects.get(dishId=productId)
+        if item:
+            # print('_________________incart_______________',Cart.objects.filter(item=item).count())
+            if Cart.objects.filter(item=item, user=request.user).count()!=0:
+                inCart=Cart.objects.get(item=item, user=request.user)
+                inCart.qty-=1
+                inCart.save()
+                return JsonResponse(f'{inCart.item.dishName} quantity has been updated to {inCart.qty}', safe=False, status=200)
+            else:
+                return JsonResponse(f'{incart.item.dishName} not present in the cart for the current user', status=404)
+    if action=='delete':
+        item=Menu.objects.get(dishId=productId)
+        if item:
+            if Cart.objects.filter(item=item, user=request.user).count()!=0:
+                inCart=Cart.objects.get(item=item, user=request.user)
+                inCart.delete()
+                return JsonResponse(f'{inCart.item.dishName} was removed from thr cart', safe=False, status=200)
+    else:
+        return JsonResponse('ERR: 403', safe=False, status=403)
+
 
 @login_required(login_url='login')
 def viewCart(request):
-    model=Cart.objects.filter(user=request.user)
-    cart=[]
-    for i in model:
-        cart.append({
-            'Item':i.item.dishName,
-            'Price':i.item.dishPrice,
-            'Quantity':i.qty
-        })
-    return JsonResponse(cart, safe=False)
+    cart=Cart.objects.filter(user=request.user)
+    return render(request, 'cart.html', {'items':cart, 'total':len(cart)})
+    # model=Cart.objects.filter(user=request.user)
+    # cart=[]
+    # for i in model:
+    #     cart.append({
+    #         'Item':i.item.dishName,
+    #         'Price':i.item.dishPrice,
+    #         'Quantity':i.qty
+    #     })
+    # return JsonResponse(cart, safe=False)
     
 
 #TODO: simple email validation added but to be improved

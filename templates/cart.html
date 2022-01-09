@@ -1,0 +1,204 @@
+{%load static%} {%load socialaccount%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
+
+    <!-- custom css file link  -->
+     <link rel="stylesheet" href="{%static 'css/cart.css'%}" />
+     <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+
+     <script>
+      var user = "{{request.user}}";
+      function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      var csrftoken = getToken("csrftoken");
+    </script>
+  </head>
+<body>
+    <header>
+      <a href="{%url 'index'%}}" class="logo"><i class="fas fa-utensils"></i> olive garden.</a>
+
+      <nav class="navbar">
+        <a href="{%url 'index'%}">Home</a>
+        <a href="{%url 'index'%}#dishes">Dishes</a>
+        <a href="{%url 'index'%}#about">About</a>
+        <a href="{%url 'index'%}#menu">Menu</a>
+        <a href="{%url 'index'%}#review">Review</a>
+        <a href="{%url 'index'%}#order">Order</a>
+      </nav>
+
+      <div class="icons">
+        <i class="fas fa-bars" id="menu-bars"></i>
+        <!-- <i class="fas fa-search" id="search-icon"></i> -->
+        <a href="#cart.html" class="fas fa-shopping-cart"></a>
+        <a
+          href="{%url 'logout'%}"
+          class="fas fa-arrow-left"
+          title="{{request.user}}: logout"
+        ></a>
+      </div>
+    </header> -->
+    <!-- header section ends -->
+     
+
+<!-- cart starts -->
+<div class="bg-light">
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-10 col-11 mx-auto">
+<div class="row mt-5 gx-3">
+<!-- left side div -->
+<div class="col-md-12 col-lg-8 col-11 mx-auto main_cart mb-lg-0 mb-5 shadow">
+<h2 class="py-4 font-weight-bold">Cart ({{total}} items)</h2>
+<!-- cart items -->
+{%for i in items%}
+<div class="card p-4" data-price='{{i.item.dishPrice}}' data-product='{{i.item.dishId}}'>
+<div class="row">
+<!-- cart images div -->
+<div class="col-md-5 col-11 mx-auto bg-light d-flex justify-content-center align-items-center shadow product_img">
+<img src="{{i.item.dishImage.url}}" class="img-fluid" alt="cart img">
+</div>
+<!-- cart product details -->
+<div class="col-md-7 col-11 mx-auto px-4 mt-2">
+<div class="row">
+<!-- product name  -->
+<div class="col-6 card-title">
+<h1 class="mb-4 product_name">{{i.item.dishName}}</h1>
+<p class="mb-2">{{i.item.dishDescription}}</p>
+</div>
+<!-- quantity inc dec -->
+<div class="col-6">
+<ul class="pagination justify-content-end set_quantity">
+<li class="page-item">
+<button class="page-link subtract">
+<i class="fas fa-minus"></i> </button>
+</li>
+<li class="page-item"><input type="text" name="" class="page-link item-qty" value="{{i.qty}}" disabled>
+</li>
+<li class="page-item">
+<button class="page-link add"> <i class="fas fa-plus"></i></button>
+</li>
+</ul>
+</div>
+<!-- Quantity done -->
+</div>
+<div class="row">
+<div class="col-12 d-flex justify-content-end price_money">
+<h3>₹<span class='item-val'>{{i.item.dishPrice}}</span></h3>
+</div>
+</div>
+</div>
+</div>
+<hr/>
+</div>
+{%endfor%}
+<!-- item complete -->
+</div>
+
+
+<!-- right side div -->
+<div class="col-md-12 col-lg-4 col-11 mx-auto mb-lg-0 mb-5 main_cart">
+<div class="right_side p-3 shadow bg-white">
+<h2 class="product_name mb-5">The Total Amount Of</h2>
+<div class="price_indiv d-flex justify-content-between">
+<p>Product amount</p>
+<p>$<span id="product_total_amt">0.00</span></p>
+</div>
+<div class="price_indiv d-flex justify-content-between">
+<p>Shipping Charge</p>
+<p>$<span id="shipping_charge">50.0</span></p>
+</div>
+<hr />
+<div class="total-amt d-flex justify-content-between font-weight-bold">
+<p>The total amount of (including VAT)</p>
+<p>$<span id="total_cart_amt">0.00</span></p>
+</div>
+<button class="chk-btn" disabled>Checkout</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Optional JavaScript -->
+<!-- Popper.js first, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+<script src="{%static 'js/checkout.js'%}"></script>
+<!-- <script type="text/javascript">
+
+var product_total_amt = document.getElementById('product_total_amt');
+var shipping_charge = document.getElementById('shipping_charge');
+var total_cart_amt = document.getElementById('total_cart_amt');
+var discountCode = document.getElementById('discount_code1');
+const decreaseNumber = (incdec, itemprice) => {
+var itemval = document.getElementById(incdec);
+var itemprice = document.getElementById(itemprice);
+console.log( itemprice.innerHTML);
+// console.log(itemval.value);
+if(itemval.value <= 0){
+itemval.value = 0;
+alert('Negative quantity not allowed');
+}else{
+itemval.value = parseInt(itemval.value) - 1;
+itemval.style.background = '#fff';
+itemval.style.color = '#000';
+itemprice.innerHTML  = parseInt(itemprice.innerHTML) - 15;
+product_total_amt.innerHTML  = parseInt(product_total_amt.innerHTML) - 15;
+total_cart_amt.innerHTML  = parseInt(product_total_amt.innerHTML) + parseInt(shipping_charge.innerHTML);
+}
+}
+const increaseNumber = (incdec, itemprice) => {
+var itemval = document.getElementById(incdec);
+var itemprice = document.getElementById(itemprice);
+// console.log(itemval.value);
+itemval.value = parseInt(itemval.value) + 1;
+itemprice.innerHTML  = parseInt(itemprice.innerHTML ) + 15;
+product_total_amt.innerHTML  = parseInt(product_total_amt.innerHTML) + 15;
+total_cart_amt.innerHTML  = parseInt(product_total_amt.innerHTML) + parseInt(shipping_charge.innerHTML);
+}
+const  discount_code = () => {
+let totalamtcurr = parseInt(total_cart_amt.innerHTML);
+let error_trw = document.getElementById('error_trw');
+if(discountCode.value === 'thapa'){
+let newtotalamt = totalamtcurr - 15;
+total_cart_amt.innerHTML = newtotalamt;
+error_trw.innerHTML = "Hurray! code is valid";
+}else{
+error_trw.innerHTML = "Try Again! Valid code is thapa";
+}
+}
+</script> -->
+</div>
+</html>
