@@ -79,7 +79,28 @@ def signUp(request):
             return redirect('index')
         return render(request, 'signup.html')
     if request.method=='POST':
-        pass
+        username=request.POST.get('uname')
+        #! if the username already exists in the database
+        if User.objects.filter(username=username).exists():
+            return render(request,'signup.html',{'error':'Username already exists'})
+        email=request.POST.get('mail')
+        #! if the email already exists in the database
+        if User.objects.filter(email=email).exists():
+            return render(request,'signup.html',{'error':'Email already exists'})
+        #! if the entered email is in valid format
+        if not isValidMail(email):
+                return render(request,'form.html',{'error':'Email not in proper format!'})
+        #TODO: Password validation is to be done
+        password=request.POST.get('psw')
+
+        #? if all the data provided is valid: then register the user to the database and login the used into the server
+        user=User.objects.create(username=username, email=email, password=password)
+        user.set_password(password)
+        user.save()
+        #* Now authenticate and login the user to the server
+        user=authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('index')
 
 @login_required(login_url='login')
 def Userlogout(request):
@@ -89,7 +110,7 @@ def Userlogout(request):
 @login_required(login_url='login')
 def updateItem(request):
     if request.method=='GET':
-        return JsonResponse('ERR: Not a GET endpoint', safe=False)
+        return JsonResponse('ERR: Not a GET endpoint', safe=False, status=403)
     data=json.loads(request.body)
     productId = data['productId']
     action = data['action']
@@ -128,3 +149,13 @@ def viewCart(request):
         })
     return JsonResponse(cart, safe=False)
     
+
+#TODO: simple email validation added but to be improved
+def isValidMail(mail):
+    #test@test.com
+    try:
+        address,domain=mail.split('@')
+    except ValueError as err:
+        return False
+    else:
+        return True

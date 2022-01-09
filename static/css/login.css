@@ -99,3 +99,6 @@ input[type="password"] {
   text-align: center;
   display: block;
 }
+.signup {
+  margin-top: 2.5em;
+}
