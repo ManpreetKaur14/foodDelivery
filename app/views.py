@@ -73,6 +73,14 @@ def Userlogin(request):
             return redirect('index')
     return render(request, 'login.html')
 
+def signUp(request):
+    if request.method=='GET':
+        if request.user.is_authenticated:
+            return redirect('index')
+        return render(request, 'signup.html')
+    if request.method=='POST':
+        pass
+
 @login_required(login_url='login')
 def Userlogout(request):
     logout(request)
