@@ -1,2 +1,5 @@
 /.env
 db.sqlite3
+app/__pycache__
+app/migrations/__pycache__
+foodDelivery/__pycache__
