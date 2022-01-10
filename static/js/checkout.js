@@ -45,22 +45,34 @@ items.forEach(function (i) {
       document.querySelector(".py-4").innerText = `Cart (${
         parseInt(totalItem) - 1
       } items)`;
+      cartTotal();
       return;
     }
     qtyElement.value = parseInt(qtyElement.value) - 1;
     updateItemTotal(i);
     updateUserOrder(i.dataset.product, "remove");
+    cartTotal();
   });
 
   i.querySelector(".add").addEventListener("click", function () {
     qtyElement.value = parseInt(qtyElement.value) + 1;
     updateItemTotal(i);
     updateUserOrder(i.dataset.product, "add");
+    cartTotal();
   });
 });
 
+function cartTotal() {
+  const prices = document.querySelectorAll(".item-val");
+  let total = 0;
+  prices.forEach((i) => (total += parseInt(i.innerText)));
+  product_total_amt.innerText = total + ".00";
+  total_cart_amt.innerText = total + 5;
+}
+
 function init() {
   items.forEach((i) => updateItemTotal(i));
+  cartTotal();
 }
 
 init();
