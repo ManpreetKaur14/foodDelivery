@@ -21,3 +21,10 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{str(self.user)} | {str(self.item.dishName)} | {self.qty}'
+
+class Order(models.Model):
+    orderId=models.IntegerField(primary_key=True)
+    amount=models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{str(self.user)} | {str(self.item.dishName)} | {self.qty}'

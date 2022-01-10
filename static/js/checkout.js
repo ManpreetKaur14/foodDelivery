@@ -70,6 +70,30 @@ function cartTotal() {
   total_cart_amt.innerText = total + 5;
 }
 
+function sendPaymentAmount(amount) {
+  var url = "/payment/";
+  console.log(csrftoken);
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify({ amount: amount }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      // location.reload();
+      console.log(data);
+    });
+}
+
+document.querySelector(".chk-btn").addEventListener("click", function () {
+  sendPaymentAmount(parseInt(total_cart_amt.innerText));
+});
+
 function init() {
   items.forEach((i) => updateItemTotal(i));
   cartTotal();

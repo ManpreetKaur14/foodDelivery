@@ -171,6 +171,15 @@ def viewCart(request):
     # return JsonResponse(cart, safe=False)
     
 
+def payment(request):
+    data=json.loads(request.body)
+    amount=data['amount']
+    return JsonResponse(f'Payment amount to be processed is: {amount}', safe=False)
+
+
+
+
+
 #TODO: simple email validation added but to be improved
 def isValidMail(mail):
     #test@test.com
