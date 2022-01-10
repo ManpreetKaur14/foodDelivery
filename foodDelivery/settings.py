@@ -169,3 +169,7 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     },
 }
+
+#razorpay credentials
+RAZOR_KEY_ID = 'rzp_test_fJcR297zvTb6cY'
+RAZOR_KEY_SECRET = 'IjEyEXg3gqvARDBlQj6lntXV'
