@@ -187,7 +187,7 @@ header .icons #menu-bars {
   align-items: center;
   flex-wrap: wrap;
   gap: 2rem;
-  padding-top: 9rem;
+  padding: 9rem;
 }
 
 .home .home-slider .slide .content {
