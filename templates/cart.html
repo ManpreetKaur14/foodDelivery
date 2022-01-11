@@ -52,7 +52,7 @@
       <a href="{%url 'index'%}" class="logo"><i class="fas fa-utensils"></i> olive garden.</a>
 
       <nav class="navbar">
-        <a href="{%url 'index'%}">Home</a>
+        <a href="javascript:history.go(-1)">Home</a>
         <a href="{%url 'index'%}#dishes">Dishes</a>
         <a href="{%url 'index'%}#about">About</a>
         <a href="{%url 'index'%}#menu">Menu</a>
@@ -130,6 +130,8 @@
 
 
 <!-- right side div -->
+<form method="POST">
+{%csrf_token%}
 <div class="col-md-12 col-lg-4 col-11 mx-auto mb-lg-0 mb-5 main_cart">
 <div class="right_side p-3 shadow bg-white">
 <h2 class="product_name mb-5">The Total Amount Of</h2>
@@ -145,10 +147,12 @@
 <div class="total-amt d-flex justify-content-between font-weight-bold">
 <p>The total amount of (including VAT)</p>
 <p>₹<span id="total_cart_amt">0.00</span></p>
+<input type="hidden" id=hidden_total name="amount", value=''>
 </div>
-<button class="chk-btn" disabled>Checkout</button>
+<button class="chk-btn">Checkout</button>
 </div>
 </div>
+</form>
 </div>
 </div>
 </div>
@@ -159,4 +163,35 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
 <script src="{%static 'js/checkout.js'%}"></script>
 </div>
+{%if post%}
+<!-- Razorpay's Javascript code. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+       
+      // Enter the Key ID generated from the Dashboard
+      key: "{{ razorpay_merchant_key }}",
+       
+      // Amount is in currency subunits.
+      // Default currency is INR. Hence,
+      // 50000 refers to 50000 paise
+      amount: "{{ razorpay_amount }}",
+      currency: "{{ currency }}",
+       
+      // Your/store name.
+      name: "Olive Garden",
+       
+      // Pass the `id` obtained in the response of Step 1
+      order_id: "{{ razorpay_order_id }}",
+      callback_url: "{{ callback_url }}",
+    };
+     
+    // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+     
+    // add event listener to the payment button.
+      rzp1.open();
+      e.preventDefault();
+  </script>
+{%endif%}
 </html>

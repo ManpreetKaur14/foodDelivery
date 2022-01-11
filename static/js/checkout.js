@@ -68,6 +68,7 @@ function cartTotal() {
   prices.forEach((i) => (total += parseInt(i.innerText)));
   product_total_amt.innerText = total + ".00";
   total_cart_amt.innerText = total + 5;
+  hidden_total.value = total_cart_amt.innerText;
 }
 
 function init() {
