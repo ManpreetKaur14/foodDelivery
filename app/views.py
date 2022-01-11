@@ -224,7 +224,7 @@ def paymenthandler(request):
                 # render success page on successful caputre of payment
                 print('_______payment success_________',request.user)
                 deleteCart(request.user)
-                return redirect('index')
+                return render(request, 'checkout.html')
         else:
 
             # if signature verification fails.
