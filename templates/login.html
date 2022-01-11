@@ -49,10 +49,11 @@
       notyf.error("{{error}}");
     </script>
     {% endif %}
-  <form method="POST">
     <div class="card">
       <h2 class="title">Log in</h2>
-      <p class="subtitle">Don't have an account? <a href="{%url 'signup'%}"> Sign Up</a></p>
+      <p class="subtitle">
+        Don't have an account? <a href="{%url 'signup'%}"> Sign Up</a>
+      </p>
 
       <div
         class="social-login"
@@ -68,6 +69,7 @@
       </div>
 
       <p class="or"><span>or</span></p>
+      <form method="POST">
         {%csrf_token%}
         <div class="email-login">
           <label for="email"> <b>Username</b></label>
