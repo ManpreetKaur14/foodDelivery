@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'foodDelivery.urls'
@@ -173,3 +174,7 @@ SOCIALACCOUNT_PROVIDERS = {
 #razorpay credentials
 RAZOR_KEY_ID = 'rzp_test_fJcR297zvTb6cY'
 RAZOR_KEY_SECRET = 'IjEyEXg3gqvARDBlQj6lntXV'
+
+#heroku setup
+import django_heroku
+django_heroku.settings(locals())
